@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Coin Flip with Choice</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+body {font-family:'Luckiest Guy', cursive; background:linear-gradient(to bottom,#003366,#0059b3); color:white; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; min-height:100vh; margin:0; padding:20px;}
+h1 {font-size:60px; margin-bottom:20px; text-shadow:2px 2px 4px black;}
+#game {background: rgba(0,0,0,0.7); padding:25px; border-radius:20px; box-shadow:0 0 30px gold; width:400px; text-align:center;}
+#coin {width:150px; height:150px; border-radius:50%; background:gold; display:flex; align-items:center; justify-content:center; font-size:40px; color:black; margin:20px auto; box-shadow:0 0 15px yellow; cursor:pointer; transition: transform 1s ease;}
+button {margin:5px; padding:12px 18px; font-size:18px; border:none; border-radius:10px; cursor:pointer; transition:all 0.2s; background:gold; color:black; font-weight:bold;}
+button:hover {transform:scale(1.1); box-shadow:0 0 12px yellow;}
+#message {margin-top:15px; font-size:22px; font-weight:bold; text-shadow:1px 1px 2px black;}
+.win {animation: glow 1s infinite alternate;}
+.lose {animation: shake 0.5s;}
+@keyframes glow {from{ text-shadow:0 0 10px yellow,0 0 20px orange; } to{ text-shadow:0 0 20px yellow,0 0 30px orange; }}
+@keyframes shake {0%{transform:translateX(0);}25%{transform:translateX(-5px);}50%{transform:translateX(5px);}75%{transform:translateX(-5px);}100%{transform:translateX(0);}}
+</style>
+</head>
+<body>
+
+<h1>Coin Flip</h1>
+<div id="game">
+  <div>Chips: <span id="chips">1000</span></div>
+  <div>Bet: <input type="number" id="bet" value="100" min="1" max="1000"></div>
+  <div>
+    <button id="chooseHeads">Heads 🪙</button>
+    <button id="chooseTails">Tails 💰</button>
+  </div>
+  <div id="coin">💰</div>
+  <div id="message"></div>
+</div>
+
+<script>
+let chips = 1000;
+let playerChoice = null;
+
+const coinEl = document.getElementById('coin');
+const messageEl = document.getElementById('message');
+const chipsEl = document.getElementById('chips');
+
+function flipCoin() {
+  if(!playerChoice) { messageEl.textContent='Choose Heads or Tails first!'; return; }
+  let bet = parseInt(document.getElementById('bet').value);
+  if(bet>chips) { messageEl.textContent='Not enough chips!'; return; }
+  messageEl.className='';
+  const result = Math.random() < 0.5 ? 'Heads' : 'Tails';
+  const spins = 4 + Math.floor(Math.random()*4);
+  coinEl.style.transform = `rotateY(${360*spins}deg)`;
+  setTimeout(() => {
+    coinEl.textContent = result==='Heads' ? '🪙' : '💰';
+    if(playerChoice === result){
+      chips += bet;
+      messageEl.textContent = `You Win! ${result}`;
+      messageEl.classList.add('win');
+    } else {
+      chips -= bet;
+      messageEl.textContent = `You Lose! ${result}`;
+      messageEl.classList.add('lose');
+    }
+    chipsEl.textContent = chips;
+    playerChoice = null;
+  }, 1000);
+}
+
+document.getElementById('chooseHeads').addEventListener('click', ()=>{
+  playerChoice='Heads';
+  flipCoin();
+});
+document.getElementById('chooseTails').addEventListener('click', ()=>{
+  playerChoice='Tails';
+  flipCoin();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+body {
+  font-family: 'Press Start 2P', cursive;
+  background: linear-gradient(to right, #ff7f50, #ffd700);
+  margin: 0;
+}
+header{
+    text-align: center;
+    align-content: center;
+    background-color: darkgrey;
+    position: relative
+}
+.select-none{
+    user-select: none;
+}
+header::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: url('drewno.jpg') repeat;
+  z-index: 0;
+  pointer-events: none;
+}
+.square{
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+header * {
+  position: relative;
+  z-index: 1;
+}
+.wybor{
+    width: 140px;
+    height: 140px;
+    background-color: rgb(255, 219, 17);
+    margin: 35px;
+    border: 5px, solid, transparent;
+    border-radius: 10px;
+    box-shadow: 0 0 8px orange, 0 0 20px orange;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.flex{
+    display: flex;
+}
+.game-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  margin: 0 auto 10px;
+}

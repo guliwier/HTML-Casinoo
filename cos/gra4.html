@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lucky Dice</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+body {font-family:'Luckiest Guy', cursive; background:linear-gradient(to bottom,#663300,#996633); color:white; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; min-height:100vh; margin:0; padding:20px;}
+h1 {font-size:60px; margin-bottom:20px; text-shadow:2px 2px 4px black;}
+#game {background: rgba(0,0,0,0.7); padding:25px; border-radius:20px; box-shadow:0 0 30px gold; width:400px; text-align:center;}
+#dice-container {display:flex; justify-content:center; margin:20px;}
+.dice {width:100px; height:100px; background:white; color:black; font-size:50px; margin:0 10px; border-radius:15px; display:flex; align-items:center; justify-content:center; box-shadow:0 0 10px #000; transform:translateY(-30px); transition: transform 0.5s;}
+button {margin:5px; padding:12px 18px; font-size:18px; border:none; border-radius:10px; cursor:pointer; transition:all 0.2s; background:gold; color:black; font-weight:bold;}
+button:hover {transform:scale(1.1); box-shadow:0 0 12px yellow;}
+#message {margin-top:15px; font-size:22px; font-weight:bold; text-shadow:1px 1px 2px black;}
+.win {animation: glow 1s infinite alternate;}
+.lose {animation: shake 0.5s;}
+@keyframes glow {from{ text-shadow:0 0 10px yellow,0 0 20px orange; } to{ text-shadow:0 0 20px yellow,0 0 30px orange; }}
+@keyframes shake {0%{transform:translateX(0);}25%{transform:translateX(-5px);}50%{transform:translateX(5px);}75%{transform:translateX(-5px);}100%{transform:translateX(0);}}
+</style>
+</head>
+<body>
+
+<h1>Lucky Dice</h1>
+<div id="game">
+  <div>Chips: <span id="chips">1000</span></div>
+  <div>Bet: <input type="number" id="bet" value="100" min="1" max="1000"></div>
+  <div>
+    <button id="chooseHigh">High (8–12)</button>
+    <button id="chooseLow">Low (2–6)</button>
+  </div>
+  <div id="dice-container">
+    <div class="dice" id="dice1">🎲</div>
+    <div class="dice" id="dice2">🎲</div>
+  </div>
+  <div id="message"></div>
+</div>
+
+<script>
+let chips = 1000;
+let playerChoice = null;
+
+const dice1 = document.getElementById('dice1');
+const dice2 = document.getElementById('dice2');
+const messageEl = document.getElementById('message');
+const chipsEl = document.getElementById('chips');
+
+function rollDice() {
+  if(!playerChoice){ messageEl.textContent='Choose High or Low first!'; return;}
+  let bet = parseInt(document.getElementById('bet').value);
+  if(bet>chips){ messageEl.textContent='Not enough chips!'; return;}
+  messageEl.className='';
+  
+  // animacja rzutu
+  dice1.style.transform='translateY(-50px)';
+  dice2.style.transform='translateY(-50px)';
+  setTimeout(()=>{
+    const d1 = Math.floor(Math.random()*6)+1;
+    const d2 = Math.floor(Math.random()*6)+1;
+    const sum = d1+d2;
+    dice1.textContent=d1;
+    dice2.textContent=d2;
+    dice1.style.transform='translateY(0)';
+    dice2.style.transform='translateY(0)';
+    
+    let result = sum >= 8 ? 'High' : 'Low';
+    if(playerChoice === result){
+      chips += bet;
+      messageEl.textContent=`You Win! Sum: ${sum}`;
+      messageEl.classList.add('win');
+    } else {
+      chips -= bet;
+      messageEl.textContent=`You Lose! Sum: ${sum}`;
+      messageEl.classList.add('lose');
+    }
+    chipsEl.textContent=chips;
+    playerChoice = null;
+  }, 500);
+}
+
+document.getElementById('chooseHigh').addEventListener('click', ()=>{
+  playerChoice='High';
+  rollDice();
+});
+document.getElementById('chooseLow').addEventListener('click', ()=>{
+  playerChoice='Low';
+  rollDice();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spin the Wheel</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+body{font-family:'Luckiest Guy',cursive;background:linear-gradient(to bottom,#660033,#990066);color:white;display:flex;flex-direction:column;align-items:center;min-height:100vh;margin:0;padding:20px;}
+h1{font-size:60px;margin-bottom:20px;text-shadow:2px 2px 4px black;}
+#game{background:rgba(0,0,0,0.7);padding:25px;border-radius:20px;width:400px;text-align:center;box-shadow:0 0 30px gold;}
+#wheel{width:150px;height:150px;border-radius:50%;border:10px solid gold;display:flex;align-items:center;justify-content:center;font-size:30px;margin:20px auto;transition: transform 2s ease;}
+button{margin:5px;padding:12px 18px;font-size:18px;border:none;border-radius:10px;cursor:pointer;background:gold;color:black;font-weight:bold;}
+button:hover{transform:scale(1.1);box-shadow:0 0 12px yellow;}
+#message{margin-top:15px;font-size:22px;font-weight:bold;text-shadow:1px 1px 2px black;}
+.win{animation:glow 1s infinite alternate;}
+.lose{animation:shake 0.5s;}
+@keyframes glow{from{text-shadow:0 0 10px yellow,0 0 20px orange;}to{text-shadow:0 0 20px yellow,0 0 30px orange;}}
+@keyframes shake{0%{transform:translateX(0);}25%{transform:translateX(-5px);}50%{transform:translateX(5px);}75%{transform:translateX(-5px);}100%{transform:translateX(0);}}
+</style>
+</head>
+<body>
+<h1>Spin the Wheel</h1>
+<div id="game">
+  <div>Chips: <span id="chips">1000</span></div>
+  <div>Bet: <input type="number" id="bet" value="50" min="1" max="1000"></div>
+  <div>
+    <button id="redBtn">Red ❤️</button>
+    <button id="blackBtn">Black ♠️</button>
+    <button id="greenBtn">Green 💚</button>
+  </div>
+  <div id="wheel">🎯</div>
+  <div id="message"></div>
+</div>
+<script>
+let chips=1000;
+const messageEl=document.getElementById('message');
+const wheelEl=document.getElementById('wheel');
+const chipsEl=document.getElementById('chips');
+
+function spin(choice){
+  let bet=parseInt(document.getElementById('bet').value);
+  if(bet>chips){messageEl.textContent='Not enough chips!'; return;}
+  const colors=['Red','Black','Green'];
+  const randColor=colors[Math.floor(Math.random()*colors.length)];
+  const spins=3+Math.floor(Math.random()*3);
+  wheelEl.style.transform=`rotate(${360*spins}deg)`;
+  setTimeout(()=>{
+    wheelEl.textContent=randColor==='Red'?'❤️':randColor==='Black'?'♠️':'💚';
+    if(choice===randColor){
+      let multiplier=randColor==='Green'?14:2;
+      chips+=bet*multiplier;
+      messageEl.textContent=`You Win! ${randColor}`;
+      messageEl.className='win';
+    } else {
+      chips-=bet;
+      messageEl.textContent=`You Lose! ${randColor}`;
+      messageEl.className='lose';
+    }
+    chipsEl.textContent=chips;
+  },2000);
+}
+
+document.getElementById('redBtn').addEventListener('click',()=>{spin('Red');});
+document.getElementById('blackBtn').addEventListener('click',()=>{spin('Black');});
+document.getElementById('greenBtn').addEventListener('click',()=>{spin('Green');});
+</script>
+</body>
+</html>
